@@ -1,5 +1,5 @@
 import express from "express";
-import {addUser, getUsers} from "./repository";
+import {addUser, deleteUser, getUsers} from "./repository";
 
 export const router = express.Router();
 
@@ -23,5 +23,11 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     await addUser(req.body.name);
+    res.send({ success: true });
+})
+
+router.delete('/:id', async (req, res) => {
+    let userId = req.params.id;
+    await deleteUser(userId);
     res.send({ success: true });
 })

@@ -35,34 +35,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addUser = exports.getUsers = void 0;
-var fs_1 = __importDefault(require("fs"));
+exports.deleteUser = exports.addUser = exports.getUsers = void 0;
+var index_1 = require("./index");
 exports.getUsers = function () {
-    return new Promise(function (resolve, reject) {
-        fs_1.default.readFile("./users.json", function (err, buff) {
-            resolve(JSON.parse(buff.toString()));
-        });
-    });
+    return index_1.User.find();
+    // return new Promise((resolve, reject) => {
+    //     fs.readFile("./users.json", (err, buff) => {
+    //         resolve(JSON.parse(buff.toString()));
+    //     });
+    // });
 };
 exports.addUser = function (name) { return __awaiter(void 0, void 0, void 0, function () {
-    var users;
+    var user1;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, exports.getUsers()];
-            case 1:
-                users = _a.sent();
-                users.push({ id: 3, name: name });
-                return [2 /*return*/, new Promise(function (resolve, reject) {
-                        fs_1.default.writeFile("users.json", JSON.stringify(users), function (err) {
-                            if (err)
-                                reject(err);
-                            resolve(1);
-                        });
-                    })];
-        }
+        user1 = new index_1.User({ name: name });
+        return [2 /*return*/, user1.save()
+            // let users: any = await getUsers();
+            // users.push({ id: v1(), name: name });
+            // return new Promise((resolve, reject) => {
+            //     fs.writeFile("users.json", JSON.stringify(users), function (err) {
+            //         if (err)
+            //             reject(err);
+            //         resolve(1);
+            //     });
+            // });
+        ];
+    });
+}); };
+exports.deleteUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, index_1.User.deleteOne({ _id: id })
+            // let users: any = await getUsers();
+            // users.push({ id: v1(), name: name });
+            // return new Promise((resolve, reject) => {
+            //     fs.writeFile("users.json", JSON.stringify(users), function (err) {
+            //         if (err)
+            //             reject(err);
+            //         resolve(1);
+            //     });
+            // });
+        ];
     });
 }); };

@@ -39,64 +39,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.router = void 0;
-var express_1 = __importDefault(require("express"));
-var repository_1 = require("./repository");
-exports.router = express_1.default.Router();
-exports.router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+exports.addUser = exports.getUsers = void 0;
+var fs_1 = __importDefault(require("fs"));
+exports.getUsers = function () {
+    return new Promise(function (resolve, reject) {
+        fs_1.default.readFile("./users.json", function (err, buff) {
+            resolve(JSON.parse(buff.toString()));
+        });
+    });
+};
+exports.addUser = function (name) { return __awaiter(void 0, void 0, void 0, function () {
     var users;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, repository_1.getUsers()];
+            case 0: return [4 /*yield*/, exports.getUsers()];
             case 1:
                 users = _a.sent();
-                res.send(users);
-                return [2 /*return*/];
+                users.push({ id: 3, name: name });
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        fs_1.default.writeFile("users.json", JSON.stringify(users), function (err) {
+                            if (err)
+                                reject(err);
+                            resolve(1);
+                        });
+                    })];
         }
     });
-}); });
-exports.router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, users, user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userId = req.params.id;
-                return [4 /*yield*/, repository_1.getUsers()];
-            case 1:
-                users = _a.sent();
-                user = users.find(function (el) { return el.id === +userId; });
-                if (user) {
-                    res.send(user);
-                }
-                else {
-                    res.send(404);
-                }
-                return [2 /*return*/];
-        }
-    });
-}); });
-exports.router.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, repository_1.addUser(req.body.name)];
-            case 1:
-                _a.sent();
-                res.send({ success: true });
-                return [2 /*return*/];
-        }
-    });
-}); });
-exports.router.delete('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                userId = req.params.id;
-                return [4 /*yield*/, repository_1.deleteUser(userId)];
-            case 1:
-                _a.sent();
-                res.send({ success: true });
-                return [2 /*return*/];
-        }
-    });
-}); });
+}); };
